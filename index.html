@@ -150,6 +150,8 @@
 
   input[type="text"]::placeholder { color: #3a3a3a; }
   input[type="text"]:focus { border-color: #3d3d3d; }
+  input[type="text"].error { border-color: #ff6b6b; }
+  input[type="text"].error::placeholder { color: #7a3a3a; }
 
   /* Toggle group */
   .toggle-group {
@@ -219,7 +221,7 @@
   .num-wrap button:active { background: #1f1f1f; }
 
   .num-wrap input[type="number"] {
-    width: 58px;
+    width: 72px;
     text-align: center;
     background: var(--surface);
     border: none;
@@ -230,10 +232,11 @@
     font-family: inherit;
     font-size: 17px;
     font-weight: 600;
-    padding: 0;
+    padding: 0 8px;
     height: 100%;
     outline: none;
     -moz-appearance: textfield;
+    cursor: text;
   }
 
   .num-wrap input[type="number"]::-webkit-inner-spin-button,
@@ -319,7 +322,7 @@
   <div class="trust">
     <div class="trust-icon">🛡️</div>
     <div>
-      <strong>Опыт 4+ лет</strong> в кибербезопасности в крупной международной IT-компании <strong>Mirantis</strong>. Сам администрирую VPN-сервис на Remnawave — понимаю специфику изнутри, не по учебнику.
+      <strong>Опыт 4+ лет</strong> в кибербезопасности в крупной международной IT-компании <strong>Mirantis</strong>.
     </div>
   </div>
 
@@ -341,7 +344,7 @@
       <label>Количество серверов (всего)</label>
       <div class="num-wrap">
         <button type="button" onclick="adj(-1)">−</button>
-        <input type="number" id="servers" value="3" min="1" max="99" readonly>
+        <input type="number" id="servers" value="3" min="1" max="99" inputmode="numeric">
         <button type="button" onclick="adj(1)">+</button>
       </div>
     </div>
@@ -384,9 +387,16 @@
 
   function adj(d) {
     const el = document.getElementById('servers');
-    const v = parseInt(el.value) + d;
+    const v = (parseInt(el.value) || 1) + d;
     if (v >= 1 && v <= 99) el.value = v;
   }
+
+  document.getElementById('servers').addEventListener('blur', function() {
+    let v = parseInt(this.value);
+    if (!v || v < 1) v = 1;
+    if (v > 99) v = 99;
+    this.value = v;
+  });
 
   document.getElementById('form').addEventListener('submit', async e => {
     e.preventDefault();
@@ -398,11 +408,24 @@
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Отправляем…';
 
+    const contact = document.getElementById('contact').value.trim();
+    const contactEl = document.getElementById('contact');
+
+    if (!contact) {
+      contactEl.style.borderColor = '#ff6b6b';
+      contactEl.focus();
+      btn.disabled = false;
+      btn.textContent = 'Отправить заявку';
+      return;
+    }
+
+    contactEl.style.borderColor = '';
+
     const payload = {
       servers: document.getElementById('servers').value,
       panel: document.querySelector('input[name="panel"]:checked').value,
       format: document.querySelector('input[name="format"]:checked').value,
-      contact: document.getElementById('contact').value.trim()
+      contact
     };
 
     try {
