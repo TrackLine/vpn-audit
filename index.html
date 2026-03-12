@@ -299,7 +299,44 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Mobile tweaks */
+  .pricing {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .pricing-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .pricing-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -.02em;
+    flex-shrink: 0;
+  }
+
+  .pricing-note {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 420px) {
+    .pricing { flex-wrap: wrap; gap: 6px; }
+    .pricing-price { font-size: 20px; }
+  }
   @media (max-width: 400px) {
     .toggle-group { gap: 6px; }
     .toggle-group label { padding: 9px 13px; font-size: 13px; }
@@ -332,6 +369,12 @@
     <div class="check">Subscription Page — rate limiting, заголовки, CORS</div>
     <div class="check">Ноды — SSH-харденинг, xray-core, пароли</div>
     <div class="check">Firewall & DDoS — правила iptables/ufw, защита от флуда и сканирования</div>
+  </div>
+
+  <div class="pricing">
+    <div class="pricing-label">Стоимость</div>
+    <div class="pricing-price">от 5 000 ₽</div>
+    <div class="pricing-note">Итоговая цена зависит от количества серверов и формата работы</div>
   </div>
 
   <hr>
