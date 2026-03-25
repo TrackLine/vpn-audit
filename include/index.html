@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Как проходит аудит</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #252525;
+    --accent: #e8ff47;
+    --text: #e8e8e8;
+    --muted: #555;
+    --radius: 10px;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Geist', system-ui, sans-serif;
+    padding: 56px 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 620px; margin: 0 auto; }
+
+  .badge {
+    display: inline-block;
+    background: #1a1f00; color: var(--accent);
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; padding: 4px 12px;
+    border-radius: 20px; border: 1px solid #2e3800;
+    margin-bottom: 22px;
+  }
+
+  h1 {
+    font-size: clamp(26px, 6vw, 38px);
+    font-weight: 700; letter-spacing: -.03em;
+    line-height: 1.15; margin-bottom: 14px;
+  }
+  h1 span { color: var(--accent); }
+
+  .lead { font-size: 15px; color: #888; margin-bottom: 48px; max-width: 480px; }
+
+  .steps { display: flex; flex-direction: column; gap: 2px; margin-bottom: 48px; }
+
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 20px;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 0 14px;
+    transition: border-color .15s;
+  }
+  .step:hover { border-color: #333; }
+
+  .step-num {
+    font-size: 13px; font-weight: 700;
+    color: var(--accent); letter-spacing: .02em;
+    padding-top: 2px;
+  }
+
+  .step-body {}
+  .step-title {
+    font-size: 16px; font-weight: 600;
+    color: var(--text); margin-bottom: 8px;
+    letter-spacing: -.01em;
+  }
+  .step-desc { font-size: 14px; color: #888; margin-bottom: 12px; line-height: 1.6; }
+  .step-desc:last-child { margin-bottom: 0; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 12px; font-weight: 500;
+    padding: 4px 10px; border-radius: 6px;
+    border: 1px solid var(--border); color: #666;
+    background: var(--bg); font-family: 'Geist', monospace;
+  }
+
+  .notice {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 48px;
+    font-size: 14px; color: #999;
+    line-height: 1.6;
+  }
+  .notice strong { color: var(--text); }
+
+  .timing {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+  .timing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .timing-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+  .timing-val { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .timing-desc { font-size: 13px; color: #666; }
+
+  .confidential {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+  }
+  .conf-title { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .conf-items { display: flex; flex-direction: column; gap: 10px; }
+  .conf-item { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: #888; }
+  .conf-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 8px; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+  @media (max-width: 480px) {
+    body { padding: 32px 14px; }
+    h1 { letter-spacing: -.02em; }
+    .lead { margin-bottom: 32px; font-size: 14px; }
+    .steps { gap: 2px; margin-bottom: 32px; }
+    .step { grid-template-columns: 28px 1fr; gap: 0 10px; padding: 16px 14px; }
+    .step-title { font-size: 15px; }
+    .step-desc { font-size: 13px; }
+    .tags { gap: 5px; }
+    .tag { font-size: 11px; padding: 3px 8px; }
+    .timing { grid-template-columns: 1fr; margin-bottom: 32px; }
+    .timing-val { font-size: 20px; }
+    .confidential { padding: 16px 16px; }
+    .conf-item { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="badge">Процесс работы</div>
+  <h1>Как проходит<br><span>аудит безопасности</span></h1>
+  <p class="lead">Прозрачный процесс от первого контакта до финального отчёта — без воды и лишних шагов.</p>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <div class="step-title">Согласование и доступы</div>
+        <div class="step-desc">После согласования начала работы прошу предоставить список серверов и их роли, SSH-доступ с правами sudo на каждый сервер, а также информацию о стеке — Remnawave, 3x-ui, версия Solo Bot.</div>
+        <div class="step-desc">Доступы используются только на время аудита. После завершения — удаляю свой ключ, это фиксируется в отчёте.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <div class="step-title">Автоматическое сканирование</div>
+        <div class="step-desc">Запускаю набор инструментов по каждому серверу и публичным эндпоинтам.</div>
+        <div class="tags">
+          <span class="tag">nmap</span>
+          <span class="tag">lynis</span>
+          <span class="tag">trivy</span>
+          <span class="tag">nuclei</span>
+          <span class="tag">testssl.sh</span>
+          <span class="tag">nikto</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <div class="step-title">Ручная проверка</div>
+        <div class="step-desc">То, что автоматика не видит — проверяю вручную: `.env`-файлы, токены и JWT-секреты, подпись webhook-запросов, конфиг xray (Reality ключи), Docker Compose, логи бота на предмет утечек.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <div class="step-title">Отчёт</div>
+        <div class="step-desc">Каждая проблема описана по единому формату: severity, компонент, описание, риск и конкретный способ устранения. Уровни: Critical, High, Medium, Low.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <div class="step-title">Устранение уязвимостей</div>
+        <div class="step-desc">Только в формате «Аудит + устранение». Закрываю все найденные проблемы руками на серверах: UFW, конфиги реверс-прокси, секреты, обновления образов и пакетов. Каждое изменение фиксируется в отчёте — что было, что стало.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">06</div>
+      <div class="step-body">
+        <div class="step-title">Финальная проверка и закрытие</div>
+        <div class="step-desc">Повторно прогоняю ключевые проверки, удаляю SSH-ключ со всех серверов, передаю финальный отчёт.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="timing">
+    <div class="timing-card">
+      <div class="timing-label">Аудит + отчёт</div>
+      <div class="timing-val">3–4 дня</div>
+      <div class="timing-desc">Полная проверка и документ с рекомендациями</div>
+    </div>
+    <div class="timing-card">
+      <div class="timing-label">Аудит + устранение</div>
+      <div class="timing-val">5–7 дней</div>
+      <div class="timing-desc">Проверка, отчёт и закрытие всех уязвимостей</div>
+    </div>
+  </div>
+
+  <div class="confidential">
+    <div class="conf-title">Конфиденциальность</div>
+    <div class="conf-items">
+      <div class="conf-item"><div class="conf-dot"></div>Доступы используются только в рамках аудита</div>
+      <div class="conf-item"><div class="conf-dot"></div>Данные об инфраструктуре не передаются третьим лицам</div>
+      <div class="conf-item"><div class="conf-dot"></div>После завершения все доступы удаляются и фиксируются в отчёте</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
